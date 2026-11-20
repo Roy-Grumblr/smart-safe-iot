@@ -1,0 +1,9 @@
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: dashboard/Dockerfile
+    container_name: smart-safe-dashboard
+    ports:
+      - "3000:3000"
+    restart: unless-stopped

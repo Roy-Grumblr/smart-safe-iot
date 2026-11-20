@@ -81,6 +81,22 @@ Nilai `action` yang didukung adalah `UNLOCK`, `LOCK`, dan `RESET_ALARM`.
 
 Dashboard dan backend berjalan sebagai satu proses Node.js. Backend menggunakan Express untuk menyajikan berkas dalam `public/` serta menyediakan API status dan kontrol.
 
+## 🐳 Cara Menjalankan (Docker — Paling Gampang)
+
+Prasyarat: [Docker Desktop](https://www.docker.com/products/docker-desktop/) terinstall.
+
+```bash
+git clone https://github.com/Roy-Grumblr/smart-safe-iot.git
+cd smart-safe-iot
+docker compose up
+```
+
+Buka [http://localhost:3000](http://localhost:3000).
+
+Untuk mematikan, jalankan `docker compose down`.
+
+Catatan: Wokwi tetap harus dibuka di browser; Wokwi bukan bagian dari Docker.
+
 ## Menjalankan Simulasi Wokwi
 
 1. Buka [Wokwi](https://wokwi.com/) dan buat proyek ESP32 baru (atau buka proyek Wokwi yang sudah berisi rangkaian).
