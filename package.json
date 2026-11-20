@@ -1,0 +1,14 @@
+{
+  "name": "smart-safe-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Smart safe dashboard and MQTT bridge",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "mqtt": "^5.10.4"
+  }
+}
