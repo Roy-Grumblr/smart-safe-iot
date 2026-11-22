@@ -6,15 +6,23 @@ const app = express();
 const port = process.env.PORT || 3000;
 const dataTopic = 'smartsafe/groupX/data';
 const commandTopic = 'smartsafe/groupX/cmd';
-const allowedActions = new Set(['UNLOCK', 'LOCK', 'RESET_ALARM']);
+const allowedActions = new Set([
+  'UNLOCK',
+  'LOCK',
+  'RESET_ALARM',
+  'DISABLE_VIBRATION',
+  'ENABLE_VIBRATION'
+]);
 
 let latestData = {
   lock: 'LOCKED',
   vibration: 'NORMAL',
   alarm: 'OFF',
   pin_errors: 0,
+  vibration_sensor: 'ENABLED',
   last_event: 'Menunggu data perangkat'
 };
+let history = [];
 
 const client = mqtt.connect('mqtt://broker.emqx.io:1883');
 
@@ -36,6 +44,14 @@ client.on('message', (topic, payload) => {
     const parsed = JSON.parse(payload.toString());
     if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
       latestData = parsed;
+      history.push({
+        time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        event: latestData.last_event || 'Update',
+        status: latestData.alarm === 'ON'
+          ? 'Alarm'
+          : (latestData.lock === 'UNLOCKED' ? 'Berhasil' : 'Info')
+      });
+      if (history.length > 20) history.shift();
     } else {
       console.error(`Ignoring non-object MQTT payload on ${topic}`);
     }
@@ -55,11 +71,15 @@ app.get('/api/status', (req, res) => {
   res.json(latestData);
 });
 
+app.get('/api/history', (req, res) => {
+  res.json(history);
+});
+
 app.post('/api/control', (req, res) => {
   const { action } = req.body || {};
   if (!allowedActions.has(action)) {
     return res.status(400).json({
-      error: 'action must be UNLOCK, LOCK, or RESET_ALARM'
+      error: 'action must be UNLOCK, LOCK, RESET_ALARM, DISABLE_VIBRATION, or ENABLE_VIBRATION'
     });
   }
 

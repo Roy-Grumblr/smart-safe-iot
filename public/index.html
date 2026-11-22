@@ -9,6 +9,175 @@
     body { background: #f4f6f9; }
     .status-value { min-height: 2rem; font-size: 1.35rem; font-weight: 600; }
     .card { border: 0; box-shadow: 0 .125rem .5rem rgba(0, 0, 0, .08); }
+    .safe-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .safe-body {
+      position: relative;
+      width: 280px;
+      height: 320px;
+      perspective: 1000px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #4a5568, #2d3748);
+      box-shadow: 12px 16px 24px rgba(0, 0, 0, .25), inset 2px 2px 5px rgba(255, 255, 255, .18);
+      transition: all .3s ease;
+    }
+    .safe-body:hover { transform: scale(1.02); }
+    .safe-glow {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle, rgba(16, 185, 129, .3), transparent 70%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .8s;
+    }
+    .safe-glow.active { opacity: 1; }
+    .safe-glow.alarm {
+      background: radial-gradient(circle, rgba(239, 68, 68, .4), transparent 70%);
+    }
+    .safe-door {
+      position: absolute;
+      z-index: 1;
+      inset: 15px 15px 48px;
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      border: 2px solid rgba(255, 255, 255, .18);
+      border-radius: 8px;
+      background: linear-gradient(145deg, #718096, #4a5568);
+      box-shadow: inset 2px 2px 8px rgba(255, 255, 255, .2), 3px 4px 8px rgba(0, 0, 0, .25);
+      transition: transform .8s cubic-bezier(.4, 0, .2, 1);
+    }
+    .safe-door.open { transform: rotateY(-110deg); }
+    .safe-dial {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: grid;
+      width: 70px;
+      height: 70px;
+      place-items: center;
+      border: 4px solid #cbd5e0;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #e2e8f0, #718096 65%, #4a5568);
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, .45), 0 2px 5px rgba(0, 0, 0, .3);
+      transform: translate(-50%, -50%);
+    }
+    .safe-dial::after {
+      width: 4px;
+      height: 20px;
+      border-radius: 2px;
+      background: #2d3748;
+      content: "";
+    }
+    .safe-dial.spinning { animation: spin 1.2s ease-in-out; }
+    .safe-handle {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      width: 60px;
+      height: 12px;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #e2e8f0, #718096);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, .35);
+      transform: translateY(-50%);
+    }
+    .safe-led {
+      position: absolute;
+      top: 12px;
+      width: 12px;
+      height: 12px;
+      border: 1px solid rgba(255, 255, 255, .5);
+      border-radius: 50%;
+      background: #4b5563;
+    }
+    .safe-led-red { left: 12px; }
+    .safe-led-green { right: 12px; }
+    .safe-led-red.active { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
+    .safe-led-green.active { background: #10b981; box-shadow: 0 0 10px #10b981; }
+    .safe-label {
+      position: absolute;
+      z-index: 2;
+      right: 0;
+      bottom: 17px;
+      left: 0;
+      color: #e2e8f0;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-align: center;
+    }
+    .safe-body.shake { animation: shake .5s ease-in-out; }
+    .safe-status-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: .5rem;
+    }
+    .pin-error-counter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .4rem;
+      color: #4b5563;
+      font-size: .875rem;
+      font-weight: 600;
+    }
+    .pin-error-meter {
+      display: flex;
+      gap: .35rem;
+    }
+    .pin-error-segment {
+      width: 42px;
+      height: 10px;
+      border-radius: 5px;
+      background: #d1d5db;
+      transition: background .3s;
+    }
+    .pin-error-segment.filled { background: #ef4444; }
+    .pin-error-meter.critical .pin-error-segment { animation: pulse .6s ease-in-out infinite; }
+    .badge {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      transition: background .3s;
+    }
+    .badge-lock, .badge-vibration, .badge-alarm { color: #fff; }
+    .badge-lock { background: #6b7280; }
+    .badge-lock.unlocked { background: #10b981; }
+    .badge-lock.locked { background: #ef4444; }
+    .badge-vibration { background: #6b7280; }
+    .badge-vibration.detected { background: #eab308; color: #1f2937; }
+    .badge-alarm { background: #6b7280; }
+    .badge-alarm.active { background: #ef4444; animation: pulse 1s ease-in-out infinite; }
+    @keyframes spin {
+      from { rotate: 0deg; }
+      to { rotate: 360deg; }
+    }
+    @keyframes shake {
+      0%, 100% { translate: 0; }
+      25% { translate: -6px; rotate: -1deg; }
+      75% { translate: 6px; rotate: 1deg; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+    @media (max-width: 768px) {
+      .safe-body { width: 200px; height: 240px; }
+      .safe-dial { width: 50px; height: 50px; }
+      .safe-dial::after { height: 14px; }
+      .safe-handle { right: 8px; width: 42px; height: 9px; }
+      .safe-led { top: 9px; width: 10px; height: 10px; }
+      .safe-led-red { left: 9px; }
+      .safe-led-green { right: 9px; }
+      .safe-label { bottom: 12px; font-size: .65rem; }
+    }
   </style>
 </head>
 <body>
@@ -20,6 +189,32 @@
   </nav>
 
   <main class="container py-4">
+    <section class="safe-visual" aria-label="Visualisasi brankas">
+      <div class="safe-body">
+        <div class="safe-glow"></div>
+        <div class="safe-door">
+          <div class="safe-dial"></div>
+          <div class="safe-handle"></div>
+          <div class="safe-led safe-led-red"></div>
+          <div class="safe-led safe-led-green"></div>
+        </div>
+        <div class="safe-label">SMART SAFE</div>
+      </div>
+      <div class="pin-error-counter">
+        <span id="pin-errors-count">Kesalahan PIN: 0/3</span>
+        <div id="pin-error-meter" class="pin-error-meter" role="progressbar" aria-label="Kesalahan PIN" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0">
+          <span class="pin-error-segment"></span>
+          <span class="pin-error-segment"></span>
+          <span class="pin-error-segment"></span>
+        </div>
+      </div>
+      <div class="safe-status-row" aria-live="polite">
+        <span id="safe-lock-badge" class="badge badge-lock">Status kunci: —</span>
+        <span id="safe-vibration-badge" class="badge badge-vibration">Getaran: —</span>
+        <span id="safe-alarm-badge" class="badge badge-alarm">Alarm: —</span>
+      </div>
+    </section>
+
     <section class="row g-3 mb-4" aria-label="Status brankas">
       <div class="col-12 col-sm-6 col-xl-3">
         <div class="card h-100"><div class="card-body">
@@ -54,6 +249,7 @@
           <button type="button" class="btn btn-primary" data-action="UNLOCK">Buka Kunci</button>
           <button type="button" class="btn btn-success" data-action="LOCK">Kunci</button>
           <button type="button" class="btn btn-warning" data-action="RESET_ALARM">Reset Alarm</button>
+          <button id="toggleVibrationBtn" type="button" class="btn btn-warning">🔕 Matikan Sensor Getaran</button>
         </div>
         <div id="control-message" class="small mt-3" role="status" aria-live="polite"></div>
       </div>
@@ -63,10 +259,10 @@
       <div class="card-body">
         <h2 class="h5">Riwayat</h2>
         <div class="table-responsive">
-          <table class="table table-striped align-middle mb-0">
-            <thead><tr><th>Waktu</th><th>Peristiwa</th></tr></thead>
+          <table id="historyTable" class="table table-striped align-middle mb-0">
+            <thead><tr><th>Waktu</th><th>Peristiwa</th><th>Status</th></tr></thead>
             <tbody id="history-body">
-              <tr><td colspan="2" class="text-secondary">Belum ada peristiwa.</td></tr>
+              <tr><td colspan="3" class="text-muted">Belum ada aktivitas</td></tr>
             </tbody>
           </table>
         </div>
@@ -77,22 +273,119 @@
   <script>
     const historyBody = document.getElementById('history-body');
     let lastEvent = '';
+    let latestData = {};
+    let shakeTimeout;
+    let vibrationSensorEnabled = true;
 
     function showValue(id, value, fallback = '—') {
       document.getElementById(id).textContent = value ?? fallback;
+    }
+
+    function updateSafeVisual(state) {
+      const door = document.querySelector('.safe-door');
+      const dial = document.querySelector('.safe-dial');
+      const body = document.querySelector('.safe-body');
+      const glow = document.querySelector('.safe-glow');
+      const redLed = document.querySelector('.safe-led-red');
+      const greenLed = document.querySelector('.safe-led-green');
+      const lockBadge = document.getElementById('safe-lock-badge');
+      const vibrationBadge = document.getElementById('safe-vibration-badge');
+      const alarmBadge = document.getElementById('safe-alarm-badge');
+      const pinErrorMeter = document.getElementById('pin-error-meter');
+      const pinErrorCount = document.getElementById('pin-errors-count');
+
+      door.classList.toggle('open', state.lock === 'UNLOCKED');
+      dial.classList.toggle('spinning', state.lock === 'UNLOCKED');
+      redLed.classList.toggle('active', state.alarm === 'ON');
+      greenLed.classList.toggle('active', state.lock === 'UNLOCKED');
+      glow.classList.toggle('active', state.lock === 'UNLOCKED' || state.alarm === 'ON');
+      glow.classList.toggle('alarm', state.alarm === 'ON');
+
+      const reportedErrors = Number(state.pin_errors ?? state.attempts ?? 0);
+      const pinErrors = Number.isFinite(reportedErrors)
+        ? Math.max(0, Math.min(3, Math.trunc(reportedErrors)))
+        : 0;
+      const segments = pinErrorMeter.querySelectorAll('.pin-error-segment');
+      segments.forEach((segment, index) => {
+        segment.classList.toggle('filled', index < pinErrors);
+      });
+      pinErrorMeter.classList.toggle('critical', pinErrors === 3);
+      pinErrorMeter.setAttribute('aria-valuenow', String(pinErrors));
+      pinErrorCount.textContent = `Kesalahan PIN: ${pinErrors}/3`;
+
+      lockBadge.classList.toggle('locked', state.lock === 'LOCKED');
+      lockBadge.classList.toggle('unlocked', state.lock === 'UNLOCKED');
+      lockBadge.textContent = state.lock === 'LOCKED'
+        ? '🔒 TERKUNCI'
+        : state.lock === 'UNLOCKED' ? '🔓 TERBUKA' : 'Status kunci: —';
+
+      vibrationBadge.classList.toggle('detected', state.vibration === 'DETECTED');
+      vibrationBadge.textContent = state.vibration === 'DETECTED'
+        ? '⚠️ GETARAN TERDETEKSI'
+        : state.vibration ? '📳 NORMAL' : 'Getaran: —';
+
+      alarmBadge.classList.toggle('active', state.alarm === 'ON');
+      alarmBadge.textContent = state.alarm === 'ON'
+        ? '🚨 ALARM AKTIF'
+        : state.alarm === 'OFF' ? '🔕 NONAKTIF' : 'Alarm: —';
+
+      const toggleVibrationBtn = document.getElementById('toggleVibrationBtn');
+      if (state.vibration_sensor === 'DISABLED') {
+        vibrationSensorEnabled = false;
+        toggleVibrationBtn.textContent = '🔔 Aktifkan Sensor Getaran';
+        toggleVibrationBtn.classList.remove('btn-warning');
+        toggleVibrationBtn.classList.add('btn-success');
+      } else {
+        vibrationSensorEnabled = true;
+        toggleVibrationBtn.textContent = '🔕 Matikan Sensor Getaran';
+        toggleVibrationBtn.classList.remove('btn-success');
+        toggleVibrationBtn.classList.add('btn-warning');
+      }
+
+      if (state.vibration === 'DETECTED') {
+        body.classList.add('shake');
+        window.clearTimeout(shakeTimeout);
+        shakeTimeout = window.setTimeout(() => body.classList.remove('shake'), 500);
+      }
     }
 
     function addHistory(event) {
       const row = document.createElement('tr');
       const timeCell = document.createElement('td');
       const eventCell = document.createElement('td');
+      const statusCell = document.createElement('td');
       timeCell.textContent = new Date().toLocaleTimeString('id-ID');
       eventCell.textContent = event;
+      statusCell.textContent = latestData.alarm === 'ON'
+        ? 'Alarm'
+        : (latestData.lock === 'UNLOCKED' ? 'Berhasil' : 'Info');
 
       if (historyBody.querySelector('td[colspan]')) historyBody.replaceChildren();
-      row.append(timeCell, eventCell);
+      row.append(timeCell, eventCell, statusCell);
       historyBody.prepend(row);
       while (historyBody.rows.length > 10) historyBody.deleteRow(-1);
+    }
+
+    async function refreshHistory() {
+      try {
+        const res = await fetch('/api/history');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const tbody = document.querySelector('#historyTable tbody') || document.querySelector('.history-list');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        if (data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="3" class="text-muted">Belum ada aktivitas</td></tr>';
+          return;
+        }
+        data.slice().reverse().forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${item.time}</td><td>${item.event}</td><td>${item.status}</td>`;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error('History fetch failed', e);
+      }
     }
 
     async function refreshStatus() {
@@ -101,6 +394,9 @@
         const response = await fetch('/api/status');
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
+        latestData = data;
+        updateSafeVisual(latestData);
+        refreshHistory();
 
         showValue('lock-value', data.lock);
         showValue('vibration-value', data.vibration);
@@ -118,6 +414,28 @@
         connection.className = 'badge text-bg-danger';
       }
     }
+
+    document.getElementById('toggleVibrationBtn').addEventListener('click', async () => {
+      const action = vibrationSensorEnabled ? 'DISABLE_VIBRATION' : 'ENABLE_VIBRATION';
+      try {
+        const response = await fetch('/api/control', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action })
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        vibrationSensorEnabled = !vibrationSensorEnabled;
+        const toggleVibrationBtn = document.getElementById('toggleVibrationBtn');
+        toggleVibrationBtn.textContent =
+          vibrationSensorEnabled ? '🔕 Matikan Sensor Getaran' : '🔔 Aktifkan Sensor Getaran';
+        toggleVibrationBtn.classList.toggle('btn-warning', vibrationSensorEnabled);
+        toggleVibrationBtn.classList.toggle('btn-success', !vibrationSensorEnabled);
+      } catch (error) {
+        const message = document.getElementById('control-message');
+        message.textContent = `Gagal mengirim perintah: ${error.message}`;
+        message.className = 'small mt-3 text-danger';
+      }
+    });
 
     document.querySelectorAll('[data-action]').forEach((button) => {
       button.addEventListener('click', async () => {
@@ -144,6 +462,8 @@
       });
     });
 
+    document.addEventListener('DOMContentLoaded', () => updateSafeVisual(latestData), { once: true });
+    updateSafeVisual(latestData);
     refreshStatus();
     window.setInterval(refreshStatus, 2000);
   </script>
